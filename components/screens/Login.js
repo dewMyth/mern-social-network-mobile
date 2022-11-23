@@ -13,13 +13,34 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const onLogin = e => {
+  const onLogin = async e => {
     e.preventDefault();
     const newUser = {
       email: email,
       password: password,
     };
-    console.log(newUser);
+    try {
+      const response = await fetch(
+        'https://vast-hollows-04909.herokuapp.com/api/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newUser),
+        },
+      );
+
+      // Convert the response to JSON
+      const user = await response.json();
+
+      if (user) {
+        navigation.navigate('Home', {user: user});
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const theme = {

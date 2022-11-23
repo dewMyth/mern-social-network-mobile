@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/native": "*",
     "@react-navigation/native-stack": "*",
+    "axios": "^0.21.1",
     "react": "18.1.0",
     "react-native": "0.70.6",
     "react-native-paper": "^5.0.0-rc.10",

@@ -5,6 +5,7 @@ import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 
 import Login from './components/screens/Login';
 import Register from './components/screens/Register';
+import Home from './components/screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,11 @@ const App = () => {
         <Stack.Screen
           name="Register"
           component={Register}
+          options={{header: () => null}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
           options={{header: () => null}}
         />
       </Stack.Navigator>
