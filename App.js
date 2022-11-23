@@ -1,13 +1,29 @@
 import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+
+import Login from './components/screens/Login';
+import Register from './components/screens/Register';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <SafeAreaView>
-      <View>
-        <Text>My App</Text>
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{header: () => null}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{header: () => null}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
