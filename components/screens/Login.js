@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
 import {
   Avatar,
   TextInput,
@@ -78,88 +78,91 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoSection}>
-        <Avatar.Image
-          size={200}
-          style={{backgroundColor: 'transparent'}}
-          source={require('../../assets/logo.png')}
-        />
-      </View>
-
-      {/* Login Section */}
-      <View style={styles.loginSection}>
-        <View style={styles.email}>
-          <TextInput
-            label="Email"
-            value={email}
-            mode="outlined"
-            onChangeText={email => setEmail(email)}
-          />
-          <HelperText type="error" visible={hasErrors()}>
-            Email address is invalid!
-          </HelperText>
-        </View>
-        <View style={styles.password}>
-          <TextInput
-            label="Password"
-            mode="outlined"
-            secureTextEntry
-            value={password}
-            onChangeText={password => setPassword(password)}
-            right={<TextInput.Icon icon="eye-outline" />}
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <View style={styles.container}>
+        <View style={styles.logoSection}>
+          <Avatar.Image
+            size={200}
+            style={{backgroundColor: 'transparent'}}
+            source={require('../../assets/logo.png')}
           />
         </View>
+
+        {/* Login Section */}
+        <View style={styles.loginSection}>
+          <View style={styles.email}>
+            <TextInput
+              label="Email"
+              value={email}
+              mode="outlined"
+              onChangeText={email => setEmail(email)}
+            />
+            <HelperText type="error" visible={hasErrors()}>
+              Email address is invalid!
+            </HelperText>
+          </View>
+          <View style={styles.password}>
+            <TextInput
+              label="Password"
+              mode="outlined"
+              secureTextEntry
+              value={password}
+              onChangeText={password => setPassword(password)}
+              right={<TextInput.Icon icon="eye-outline" />}
+            />
+          </View>
+          <View>
+            <Button
+              mode="elevated"
+              textColor={theme.colors.white}
+              buttonColor={theme.colors.loginBtnColor}
+              loading={isLoading}
+              onPress={e => onLogin(e)}>
+              Login
+            </Button>
+          </View>
+        </View>
+
+        {/* Login Section */}
+
+        {/* Register Section */}
+        <View style={styles.registerSection}>
+          <View
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: StyleSheet.hairlineWidth,
+            }}
+          />
+
+          <View style={styles.smallText}>
+            <Text variant="labelSmall">Don't have an account? </Text>
+          </View>
+
+          <View>
+            <Button
+              textColor={theme.colors.white}
+              buttonColor={theme.colors.registerBtnColor}
+              onPress={() => navigation.navigate('Register')}>
+              Register
+            </Button>
+          </View>
+        </View>
         <View>
-          <Button
-            mode="elevated"
-            textColor={theme.colors.white}
-            buttonColor={theme.colors.loginBtnColor}
-            loading={isLoading}
-            onPress={e => onLogin(e)}>
-            Login
-          </Button>
+          <Snackbar
+            visible={error}
+            onDismiss={onDismissSnackBar}
+            action={{
+              label: 'Got it',
+              onPress: () => {
+                onDismissSnackBar();
+              },
+            }}>
+            {errorMsg}
+          </Snackbar>
         </View>
       </View>
-
-      {/* Login Section */}
-
-      {/* Register Section */}
-      <View style={styles.registerSection}>
-        <View
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-
-        <View style={styles.smallText}>
-          <Text variant="labelSmall">Don't have an account? </Text>
-        </View>
-
-        <View>
-          <Button
-            textColor={theme.colors.white}
-            buttonColor={theme.colors.registerBtnColor}
-            onPress={() => navigation.navigate('Register')}>
-            Register
-          </Button>
-        </View>
-      </View>
-      <View>
-        <Snackbar
-          visible={error}
-          onDismiss={onDismissSnackBar}
-          action={{
-            label: 'Got it',
-            onPress: () => {
-              onDismissSnackBar();
-            },
-          }}>
-          {errorMsg}
-        </Snackbar>
-      </View>
-    </View>
+    </>
   );
 };
 
