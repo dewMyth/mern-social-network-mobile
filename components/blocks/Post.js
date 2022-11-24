@@ -14,9 +14,13 @@ import {
 
 import {timeAgo} from '../../helpers/timeAgo';
 
+import storage from '@react-native-firebase/storage';
+
 const Post = ({post}) => {
   const [status, setStatus] = useState('checked');
   const [icon, setIcon] = useState('heart-outline');
+
+  const [imagePathFromFS, setImagePathFromFS] = useState(null);
 
   const [poster, setPoster] = useState({});
 
@@ -31,10 +35,28 @@ const Post = ({post}) => {
         `https://vast-hollows-04909.herokuapp.com/api/user?userId=${post.userId}`,
       );
       const data = await response.json();
-      console.log(data);
       setPoster(data);
     };
     getPoster();
+  }, [post]);
+
+  useEffect(() => {
+    const getImageFromFSStorage = async () => {
+      console.log(post.img);
+
+      //BUG FIX
+      const imagePath = post.img?.replace(/"([^"]+(?="))"/g, '$1');
+      //END BUG FIX
+
+      if (imagePath) {
+        const url = await storage().ref(imagePath).getDownloadURL();
+        setImagePathFromFS(url);
+        console.log(url);
+      } else {
+        setImgPathfromFS('');
+      }
+    };
+    getImageFromFSStorage();
   }, [post]);
 
   return (
@@ -49,7 +71,7 @@ const Post = ({post}) => {
           <Card.Content>
             <Paragraph>{post.desc}</Paragraph>
           </Card.Content>
-          <Card.Cover source={{uri: 'https://picsum.photos/700'}} />
+          <Card.Cover source={{uri: imagePathFromFS}} />
           <ToggleButton
             icon={icon}
             value="heart"
