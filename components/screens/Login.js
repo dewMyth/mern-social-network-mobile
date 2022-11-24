@@ -17,6 +17,7 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -106,10 +107,17 @@ const Login = ({navigation}) => {
             <TextInput
               label="Password"
               mode="outlined"
-              secureTextEntry
+              secureTextEntry={secureTextEntry}
               value={password}
               onChangeText={password => setPassword(password)}
-              right={<TextInput.Icon icon="eye-outline" />}
+              right={
+                <TextInput.Icon
+                  icon="eye-outline"
+                  onPress={() => {
+                    setSecureTextEntry(!secureTextEntry);
+                  }}
+                />
+              }
             />
           </View>
           <View>
