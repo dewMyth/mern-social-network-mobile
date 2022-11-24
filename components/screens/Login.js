@@ -11,13 +11,14 @@ import {
   Snackbar,
 } from 'react-native-paper';
 
+import GLOBAL_STATE from '../../GlobalState.js';
+
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [user, setUser] = useState(null);
 
   const hasErrors = () => {
     if (email.length === 0) {
@@ -53,7 +54,7 @@ const Login = ({navigation}) => {
       const json = await response.json();
       console.log(json);
       if (json.message == null && isLoading === false) {
-        setUser(json);
+        GLOBAL_STATE.user = json;
         navigation.navigate('Home', {user: json});
       } else {
         setError(true);

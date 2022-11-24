@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Button} from 'react-native';
 
 const Home = ({route, navigation}) => {
   const user = route.params.user;
@@ -9,6 +9,10 @@ const Home = ({route, navigation}) => {
       <Text>
         Welcome, {user.firstName} {user.lastName} (@{user.username})
       </Text>
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('Register')}
+      />
     </View>
   );
 };
