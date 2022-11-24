@@ -7,11 +7,27 @@ import {
   useTheme,
   MD3LightTheme as DefaultTheme,
   Text,
+  HelperText,
+  Snackbar,
 } from 'react-native-paper';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [user, setUser] = useState(null);
+
+  const hasErrors = () => {
+    if (email.length === 0) {
+      return false;
+    } else {
+      return !email.includes('@');
+    }
+  };
+
+  const onDismissSnackBar = () => setError(false);
 
   const onLogin = async e => {
     e.preventDefault();
@@ -20,6 +36,7 @@ const Login = ({navigation}) => {
       password: password,
     };
     try {
+      setIsLoading(true);
       const response = await fetch(
         'https://vast-hollows-04909.herokuapp.com/api/auth/login',
         {
@@ -31,15 +48,19 @@ const Login = ({navigation}) => {
           body: JSON.stringify(newUser),
         },
       );
-
-      // Convert the response to JSON
-      const user = await response.json();
-
-      if (user) {
-        navigation.navigate('Home', {user: user});
+      setIsLoading(false);
+      // Convert the response to JSON and set to User
+      const json = await response.json();
+      console.log(json);
+      if (json.message == null && isLoading === false) {
+        setUser(json);
+        navigation.navigate('Home', {user: json});
+      } else {
+        setError(true);
+        setErrorMsg(json.message);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -67,16 +88,21 @@ const Login = ({navigation}) => {
 
       {/* Login Section */}
       <View style={styles.loginSection}>
-        <View style={styles.input}>
+        <View style={styles.email}>
           <TextInput
             label="Email"
             value={email}
+            mode="outlined"
             onChangeText={email => setEmail(email)}
           />
+          <HelperText type="error" visible={hasErrors()}>
+            Email address is invalid!
+          </HelperText>
         </View>
-        <View style={styles.input}>
+        <View style={styles.password}>
           <TextInput
             label="Password"
+            mode="outlined"
             secureTextEntry
             value={password}
             onChangeText={password => setPassword(password)}
@@ -85,9 +111,10 @@ const Login = ({navigation}) => {
         </View>
         <View>
           <Button
-            icon="login"
+            mode="elevated"
             textColor={theme.colors.white}
             buttonColor={theme.colors.loginBtnColor}
+            loading={isLoading}
             onPress={e => onLogin(e)}>
             Login
           </Button>
@@ -111,13 +138,25 @@ const Login = ({navigation}) => {
 
         <View>
           <Button
-            icon="login"
             textColor={theme.colors.white}
             buttonColor={theme.colors.registerBtnColor}
             onPress={() => navigation.navigate('Register')}>
             Register
           </Button>
         </View>
+      </View>
+      <View>
+        <Snackbar
+          visible={error}
+          onDismiss={onDismissSnackBar}
+          action={{
+            label: 'Got it',
+            onPress: () => {
+              onDismissSnackBar();
+            },
+          }}>
+          {errorMsg}
+        </Snackbar>
       </View>
     </View>
   );
@@ -145,8 +184,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
 
-  input: {
-    marginBottom: 10,
+  email: {
+    marginBottom: -10,
+  },
+  password: {
+    marginBottom: 25,
   },
 
   smallText: {
