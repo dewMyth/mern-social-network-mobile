@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "170065290262",
+    "project_id": "mern-social-network-66ee8",
+    "storage_bucket": "mern-social-network-66ee8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170065290262:android:ab01790ce59995b8ba4137",
+        "android_client_info": {
+          "package_name": "com.mernsocialnetwork"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "170065290262-ji6j2nsq7hm2jk1e0kpo48l4r9pmh2p8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD16nmT3Jwy847nA3AmbABPVL8lvkwquYg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "170065290262-ji6j2nsq7hm2jk1e0kpo48l4r9pmh2p8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
