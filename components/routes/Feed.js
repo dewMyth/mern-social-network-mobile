@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 
 import {ActivityIndicator} from 'react-native-paper';
+import baseUrl from '../../baseUrl';
 
 import Post from '../blocks/Post';
 
@@ -15,9 +16,7 @@ const Feed = ({user}) => {
   useEffect(() => {
     const getUserPosts = async () => {
       setIsLoading(true);
-      const response = await fetch(
-        `https://vast-hollows-04909.herokuapp.com/api/post/timeline/${user._id}`,
-      );
+      const response = await fetch(`${baseUrl}/post/timeline/${user._id}`);
       const data = await response.json();
       setPosts(data);
       setIsLoading(false);
@@ -35,15 +34,18 @@ const Feed = ({user}) => {
           borderBottomWidth: 2,
         }}
       />
-      <ScrollView style={styles.container}>
-        {isLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator animating={true} color="#da0037" />
-          </View>
-        ) : (
-          posts.map(post => <Post post={post} key={post._id} />)
-        )}
-      </ScrollView>
+
+      {isLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator animating={true} color="#da0037" size="large" />
+        </View>
+      ) : (
+        <ScrollView style={styles.container}>
+          {posts.map(post => (
+            <Post post={post} key={post._id} />
+          ))}
+        </ScrollView>
+      )}
     </>
   );
 };
@@ -55,8 +57,10 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 
-  loader: {
+  loaderContainer: {
     flex: 1,
+    justifyContent: 'center',
+    padding: 8,
   },
 });
 

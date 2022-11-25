@@ -10,6 +10,7 @@ import {
   HelperText,
   Snackbar,
 } from 'react-native-paper';
+import baseUrl from '../../baseUrl.js';
 
 import GLOBAL_STATE from '../../GlobalState.js';
 
@@ -39,17 +40,14 @@ const Login = ({navigation}) => {
     };
     try {
       setIsLoading(true);
-      const response = await fetch(
-        'https://vast-hollows-04909.herokuapp.com/api/auth/login',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser),
+      const response = await fetch(baseUrl + '/auth/login', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(newUser),
+      });
       setIsLoading(false);
       // Convert the response to JSON and set to User
       const json = await response.json();
@@ -112,7 +110,7 @@ const Login = ({navigation}) => {
               onChangeText={password => setPassword(password)}
               right={
                 <TextInput.Icon
-                  icon="eye-outline"
+                  icon={secureTextEntry ? 'eye-outline' : 'eye-off-outline'}
                   onPress={() => {
                     setSecureTextEntry(!secureTextEntry);
                   }}

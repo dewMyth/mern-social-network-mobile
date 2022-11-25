@@ -16,6 +16,7 @@ import {
 
 import storage from '@react-native-firebase/storage';
 import {timeAgo} from '../../helpers/timeAgo';
+import baseUrl from '../../baseUrl';
 
 const Post = ({post}) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -35,17 +36,14 @@ const Post = ({post}) => {
       userId: GLOBAL_STATE.user._id,
     };
 
-    await fetch(
-      'https://vast-hollows-04909.herokuapp.com/api/post/' + post._id + '/like',
-      {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newLikedUser),
+    await fetch(baseUrl + '/post/' + post._id + '/like', {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-    )
+      body: JSON.stringify(newLikedUser),
+    })
       .then(response => {
         console.log(response);
         setIsLiked(!isLiked);
@@ -58,9 +56,7 @@ const Post = ({post}) => {
 
   useEffect(() => {
     const getPoster = async () => {
-      const response = await fetch(
-        `https://vast-hollows-04909.herokuapp.com/api/user?userId=${post.userId}`,
-      );
+      const response = await fetch(`${baseUrl}/user?userId=${post.userId}`);
       const data = await response.json();
       setPoster(data);
     };
