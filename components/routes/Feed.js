@@ -5,6 +5,8 @@ import {ActivityIndicator} from 'react-native-paper';
 
 import Post from '../blocks/Post';
 
+import Share from '../blocks/Share';
+
 const Feed = ({user}) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -25,6 +27,14 @@ const Feed = ({user}) => {
 
   return (
     <>
+      <Share user={user} />
+      <View
+        style={{
+          marginTop: 10,
+          borderBottomColor: 'gray',
+          borderBottomWidth: 2,
+        }}
+      />
       <ScrollView style={styles.container}>
         {isLoading ? (
           <View style={styles.loader}>
@@ -42,7 +52,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     flex: 1,
-    padding: 10,
+    gap: 20,
   },
 
   loader: {
