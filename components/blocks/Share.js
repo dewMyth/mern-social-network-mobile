@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react';
 
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-import {Card, Avatar, TextInput, Button} from 'react-native-paper';
+import {Avatar, TextInput} from 'react-native-paper';
 
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import {useNavigation} from '@react-navigation/native';
+
 const Share = ({user}) => {
-  const [description, setDescription] = useState('');
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -21,20 +23,34 @@ const Share = ({user}) => {
         <TextInput
           label={`Hi, ${user.firstName}?`}
           placeholder="What's on your mind?"
-          value={description}
           mode="outlined"
           onChangeText={desc => setDescription(desc)}
           theme={{roundness: 15}}
           style={{height: 40, fontSize: 12}}
+          forceTextInputFocus={true}
         />
       </View>
-      <View
-        style={styles.uploadPhotoBtn}
-        onPress={() => console.log('Upload Photo')}>
-        <Image
-          style={{width: 40, height: 40, marginLeft: 7}}
-          source={{uri: 'https://i.imgur.com/LzCIALx.png'}}
-        />
+      <View style={styles.uploadPhotoBtn}>
+        <TouchableOpacity onPress={() => navigation.navigate('CreatePost')}>
+          <Image
+            style={{width: 40, height: 40, marginLeft: 7}}
+            source={{uri: 'https://i.imgur.com/LzCIALx.png'}}
+          />
+        </TouchableOpacity>
+      </View>
+      <View>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('CreatePost', {
+              user: user,
+            })
+          }>
+          <MaterialCommunityIcons
+            name="share-circle"
+            color="#da0037"
+            size={30}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -45,7 +61,7 @@ styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginLeft: 20,
-    marginRight: 20,
+    marginRight: 10,
     marginTop: 10,
     height: 60,
     gap: 10,
@@ -59,7 +75,9 @@ styles = StyleSheet.create({
     flex: 4,
   },
   uploadPhotoBtn: {
-    paddingLeft: 10,
+    flex: 1,
+  },
+  submitBtn: {
     flex: 1,
   },
 });

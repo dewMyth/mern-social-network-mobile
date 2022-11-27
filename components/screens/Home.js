@@ -23,6 +23,8 @@ const Home = ({route, navigation}) => {
       title: 'Feed',
       focusedIcon: 'post',
       unfocusedIcon: 'post-outline',
+      color: '#2962ff',
+      badge: true,
     },
     {
       key: 'friends',
@@ -35,6 +37,7 @@ const Home = ({route, navigation}) => {
       title: 'Notifications',
       focusedIcon: 'bell',
       unfocusedIcon: 'bell-outline',
+      badge: true,
     },
     {
       key: 'profile',
@@ -71,6 +74,7 @@ const Home = ({route, navigation}) => {
         barStyle={{backgroundColor: 'black'}}
         inactiveColor="#da0037"
         activeColor="#da0037"
+        labeled={false}
       />
     </>
 

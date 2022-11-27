@@ -17,6 +17,7 @@
     "axios": "^0.21.1",
     "react": "18.1.0",
     "react-native": "0.70.6",
+    "react-native-image-picker": "^4.10.1",
     "react-native-paper": "^5.0.0-rc.10",
     "react-native-safe-area-context": "*",
     "react-native-screens": "*",

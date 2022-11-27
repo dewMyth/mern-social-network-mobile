@@ -8,6 +8,7 @@ import {
   View,
   useColorScheme,
   StatusBar,
+  Button,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -15,6 +16,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Login from './components/screens/Login';
 import Register from './components/screens/Register';
 import Home from './components/screens/Home';
+import CreatePost from './components/routes/CreatePost';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +42,7 @@ const App = () => {
             component={Home}
             options={{header: () => null}}
           />
+          <Stack.Screen name="CreatePost" component={CreatePost} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
