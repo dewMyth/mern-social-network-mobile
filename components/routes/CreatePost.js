@@ -8,12 +8,11 @@ import GlobalState from '../../GlobalState';
 
 import baseUrl from '../../baseUrl';
 
-const CreatePost = ({}) => {
+const CreatePost = ({navigation}) => {
   const user = GlobalState.user;
 
   const [description, setDescription] = useState('');
   const [img, setImg] = useState('');
-  const [height, setHeight] = useState(0);
   const [imgThumbnailPath, setImgThumbnailPath] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,7 +30,7 @@ const CreatePost = ({}) => {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (imgThumbnailPath) {
       const data = new FormData();
       data.append('postImg', {
@@ -50,23 +49,70 @@ const CreatePost = ({}) => {
         body: data,
       };
 
-      fetch(baseUrl + '/upload', config).then(response => {
+      await fetch(baseUrl + '/upload', config).then(response => {
         return response.json().then(data => {
           const newPost = {
-            description: description,
+            desc: description,
             img: data.imgPath,
-            user: user._id,
+            userId: user._id,
           };
           console.log(newPost);
+
+          // Post upload
+          fetch(baseUrl + '/post/create', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newPost),
+          }).then(response => {
+            return response
+              .json()
+              .then(data => {
+                alert('Post created successfully');
+                setTimeout(() => {
+                  navigation.navigate('Home');
+                }, 5000);
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          });
         });
       });
-    } else {
+    }
+
+    // Post upload without image
+    if (!imgThumbnailPath) {
       const newPost = {
-        description: description,
+        desc: description,
         img: '',
-        user: user._id,
+        userId: user._id,
       };
       console.log(newPost);
+
+      // Post upload
+      fetch(baseUrl + '/post/create', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newPost),
+      }).then(response => {
+        return response
+          .json()
+          .then(data => {
+            alert('Post created successfully');
+            setTimeout(() => {
+              navigation.navigate('Home');
+            }, 5000);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      });
     }
   };
 
@@ -82,29 +128,37 @@ const CreatePost = ({}) => {
           onChangeText={desc => setDescription(desc)}
           theme={{roundness: 15}}
           multiline={true}
-          onContentSizeChange={event => {
-            setHeight(event.nativeEvent.contentSize.height);
-          }}
-          style={{
-            fontSize: 12,
-            height: 150,
-          }}
         />
       </View>
       <View style={styles.imageContainer}>
-        <Button
-          mode="contained"
-          buttonColor="#da0037"
-          onPress={handleImageUpload}>
-          Add a image
-        </Button>
-        <Button mode="contained" buttonColor="#da0037" onPress={onSubmit}>
-          Share Post
-        </Button>
-        <Image
-          source={imgThumbnailPath ? {uri: imgThumbnailPath} : null}
-          style={{width: 400, height: 400, resizeMode: 'cover'}}
-        />
+        <View style={styles.addImageBtn}>
+          <Button
+            mode="contained"
+            buttonColor="#da0037"
+            onPress={handleImageUpload}>
+            Add an image
+          </Button>
+        </View>
+        {imgThumbnailPath ? (
+          <View style={styles.imgView}>
+            <Image
+              source={imgThumbnailPath ? {uri: imgThumbnailPath} : null}
+              style={{
+                width: 350,
+                height: 350,
+                resizeMode: 'cover',
+                borderRadius: 10,
+                boxShadow: '0 0 10px rgba(0,0,0,0.5)',
+              }}
+            />
+          </View>
+        ) : null}
+
+        <View style={styles.addShareBtn}>
+          <Button mode="contained" buttonColor="#da0037" onPress={onSubmit}>
+            Share Post
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -121,6 +175,16 @@ const styles = {
   },
   imageContainer: {
     marginTop: 20,
+    display: 'flex',
+    gap: 10,
+  },
+
+  addImageBtn: {
+    marginBottom: 10,
+  },
+
+  addShareBtn: {
+    marginTop: 10,
   },
 };
 

@@ -18,7 +18,11 @@ const Feed = ({user}) => {
       setIsLoading(true);
       const response = await fetch(`${baseUrl}/post/timeline/${user._id}`);
       const data = await response.json();
-      setPosts(data);
+      setPosts(
+        data.sort((post1, post2) => {
+          return new Date(post2.createdAt) - new Date(post1.createdAt);
+        }),
+      );
       setIsLoading(false);
     };
     getUserPosts();

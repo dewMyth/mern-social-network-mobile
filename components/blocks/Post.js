@@ -75,8 +75,6 @@ const Post = ({post}) => {
         const url = await storage().ref(imagePath).getDownloadURL();
         setImagePathFromFS(url);
         console.log(url);
-      } else {
-        setImgPathfromFS('');
       }
     };
     getImageFromFSStorage();
@@ -109,10 +107,12 @@ const Post = ({post}) => {
           <Card.Content style={{marginBottom: 3, marginTop: 5}}>
             <Paragraph>{post.desc}</Paragraph>
           </Card.Content>
-          <Image
-            source={{uri: imagePathFromFS}}
-            style={{width: 400, height: 400, resizeMode: 'cover'}}
-          />
+          {imagePathFromFS ? (
+            <Image
+              source={{uri: imagePathFromFS}}
+              style={{width: 400, height: 400, resizeMode: 'cover'}}
+            />
+          ) : null}
         </View>
 
         {/* Description & Image  */}

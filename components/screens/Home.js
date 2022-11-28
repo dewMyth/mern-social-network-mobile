@@ -2,11 +2,12 @@ import React from 'react';
 import {View, StyleSheet, Button, StatusBar} from 'react-native';
 
 import {BottomNavigation, Text, Appbar} from 'react-native-paper';
+import GlobalState from '../../GlobalState';
 
 import Feed from '../routes/Feed';
 
 const Home = ({route, navigation}) => {
-  const user = route.params.user;
+  const user = GlobalState.user;
 
   const feedRoute = () => <Feed user={user} />;
 
