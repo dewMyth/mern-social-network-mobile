@@ -7,9 +7,14 @@ import GlobalState from '../../GlobalState';
 
 import {timeAgo} from '../../helpers/timeAgo';
 
+import {useNavigation} from '@react-navigation/native';
+
 const Conversation = ({conversation}) => {
   console.log(conversation);
   const user = GlobalState.user;
+
+  const navigation = useNavigation();
+
   const [friend, setFriend] = useState(null);
   const [lastMsg, setLastMsg] = useState(null);
 
@@ -57,7 +62,14 @@ const Conversation = ({conversation}) => {
 
   return (
     <>
-      <TouchableOpacity style={styles.conversationContainer}>
+      <TouchableOpacity
+        style={styles.conversationContainer}
+        onPress={() =>
+          navigation.navigate('Chat', {
+            conversation: conversation,
+            friend: friend,
+          })
+        }>
         {friend && (
           <>
             <View style={styles.avatarContainer}>
@@ -77,6 +89,11 @@ const Conversation = ({conversation}) => {
               <Text variant="labelMedium" style={{color: 'gray'}}>
                 {lastMsg ? lastMsg : 'No messages yet...'}
                 {/* {timeAgo(new Date(conversation.updatedAt))} */}
+              </Text>
+            </View>
+            <View style={styles.dateContainer}>
+              <Text variant="labelSmall" style={{color: 'gray'}}>
+                {timeAgo(new Date(conversation.updatedAt))}
               </Text>
             </View>
           </>
@@ -99,6 +116,12 @@ const styles = StyleSheet.create({
 
   titleContainer: {
     flex: 5,
+  },
+
+  dateContainer: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'flex-end',
   },
 });
 
