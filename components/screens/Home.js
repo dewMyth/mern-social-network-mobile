@@ -57,7 +57,7 @@ const Home = ({route, navigation}) => {
 
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="black" />
+      <StatusBar barStyle="default" backgroundColor="#171717" />
       <Appbar.Header elevated={true} style={styles.appBar}>
         <Appbar.Content color="#da0037" title="The Social App" />
         <Appbar.Action color="#da0037" icon="magnify" onPress={() => {}} />
@@ -72,7 +72,7 @@ const Home = ({route, navigation}) => {
         onIndexChange={setIndex}
         renderScene={renderScene}
         sceneAnimationEnabled={true}
-        barStyle={{backgroundColor: 'black'}}
+        barStyle={{backgroundColor: '#171717'}}
         inactiveColor="#da0037"
         activeColor="#da0037"
         labeled={false}
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   appBar: {
-    backgroundColor: '#000000',
+    backgroundColor: '#171717',
     textColor: '#ffffff',
   },
 });
