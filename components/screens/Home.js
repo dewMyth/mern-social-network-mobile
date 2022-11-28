@@ -64,7 +64,7 @@ const Home = ({route, navigation}) => {
         <Appbar.Action
           color="#da0037"
           icon="android-messages"
-          onPress={() => {}}
+          onPress={() => navigation.navigate('Messenger')}
         />
       </Appbar.Header>
       <BottomNavigation

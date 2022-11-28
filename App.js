@@ -17,6 +17,8 @@ import Login from './components/screens/Login';
 import Register from './components/screens/Register';
 import Home from './components/screens/Home';
 import CreatePost from './components/routes/CreatePost';
+import Messenger from './components/routes/Messenger';
+import Chat from './components/routes/Chat';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +45,8 @@ const App = () => {
             options={{header: () => null}}
           />
           <Stack.Screen name="CreatePost" component={CreatePost} />
+          <Stack.Screen name="Messenger" component={Messenger} />
+          <Stack.Screen name="Chat" component={Chat} />
         </Stack.Navigator>
       </NavigationContainer>
     </>
