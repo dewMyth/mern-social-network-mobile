@@ -2,12 +2,18 @@ import React from 'react';
 
 import {View, Text, StyleSheet} from 'react-native';
 
-const Message = ({own}) => {
+import {timeAgo} from '../../helpers/timeAgo';
+
+const Message = ({own, message}) => {
   return (
     <View style={own ? styles.messageOwn : styles.message}>
       <View style={own ? styles.messageOwnText : styles.messageText}>
-        <Text style={own ? styles.msgOwnBody : styles.msgBody}>Helloooo</Text>
-        <Text style={own ? styles.msgOwnTime : styles.msgTime}>9:08 PM</Text>
+        <Text style={own ? styles.msgOwnBody : styles.msgBody}>
+          {message.text}
+        </Text>
+        <Text style={own ? styles.msgOwnTime : styles.msgTime}>
+          {timeAgo(new Date(message.createdAt))}
+        </Text>
       </View>
     </View>
   );
@@ -57,11 +63,6 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'right',
   },
-
-  // messageWwn .messageText {
-  //     background-color: rgb(245, 241, 241);
-  //     color: black;
-  // }
 });
 
 export default Message;

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 
 import {
   View,
@@ -13,15 +13,20 @@ import Message from '../blocks/Message';
 
 import {useHeaderHeight} from '@react-navigation/elements';
 
+import GlobalState from '../../GlobalState';
+
 const Chat = ({route}) => {
   const {conversation, friend} = route.params;
+
+  const user = GlobalState.user;
 
   const [messages, setMessages] = useState([]);
 
   const [msg, setMsg] = useState('');
 
   const height = useHeaderHeight();
-  console.log(height);
+
+  const scrollViewRef = useRef();
 
   useEffect(() => {
     const getMessages = async () => {
@@ -46,58 +51,73 @@ const Chat = ({route}) => {
     getMessages();
   }, [conversation]);
 
+  const handleSendMsg = async () => {
+    const newMsg = {
+      conversationId: conversation._id,
+      senderId: user._id,
+      text: msg,
+    };
+
+    await fetch(baseUrl + '/message/create', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newMsg),
+    }).then(response => {
+      response.json().then(data => {
+        setMessages([...messages, data]);
+      });
+    });
+  };
+
   return (
-    <>
-      <View style={styles.chatBoxContainer}>
-        <ScrollView style={styles.chatBox}>
-          <Message own={true} />
-          <Message own={false} />
-          <Message own={true} />
-          <Message own={false} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={false} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-          <Message own={true} />
-        </ScrollView>
-      </View>
-      <KeyboardAvoidingView
-        style={{position: 'absolute', left: 0, right: 0, bottom: 0}}
-        behavior="position"
-        keyboardVerticalOffset={height - 300}>
-        <View style={styles.chatBottom}>
-          <View style={styles.textInput}>
-            <TextInput
-              label="Your Message"
-              value={msg}
-              mode="outlined"
-              onChangeText={msg => setMsg(msg)}
-            />
-          </View>
-          <View style={styles.sendBtn}>
-            <Button
-              icon="send"
-              mode="contained"
-              buttonColor="#da0037"
-              onPress={() => console.log('Pressed')}
-            />
-          </View>
+    console.log(messages),
+    (
+      <>
+        <View style={styles.chatBoxContainer}>
+          <ScrollView
+            style={styles.chatBox}
+            ref={scrollViewRef}
+            onContentSizeChange={() =>
+              scrollViewRef.current.scrollToEnd({animated: true})
+            }>
+            {messages?.map(message => {
+              return (
+                <Message
+                  own={message.senderId === user._id ? true : false}
+                  message={message}
+                />
+              );
+            })}
+          </ScrollView>
         </View>
-      </KeyboardAvoidingView>
-    </>
+        <KeyboardAvoidingView
+          style={{position: 'absolute', left: 0, right: 0, bottom: 0}}
+          behavior="position"
+          keyboardVerticalOffset={height - 300}>
+          <View style={styles.chatBottom}>
+            <View style={styles.textInput}>
+              <TextInput
+                label="Your Message"
+                value={msg}
+                mode="outlined"
+                onChangeText={msg => setMsg(msg)}
+              />
+            </View>
+            <View style={styles.sendBtn}>
+              <Button
+                icon="send"
+                mode="contained"
+                buttonColor="#da0037"
+                onPress={handleSendMsg}
+              />
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </>
+    )
   );
 };
 
