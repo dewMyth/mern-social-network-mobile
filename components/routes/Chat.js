@@ -38,12 +38,9 @@ const Chat = ({route}) => {
           },
         }).then(response => {
           response.json().then(data => {
-            if (data.length > 0) {
-              setMessages(data);
-            }
+            setMessages(data);
           });
         });
-        setMessages(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -51,73 +48,80 @@ const Chat = ({route}) => {
     getMessages();
   }, [conversation]);
 
-  const handleSendMsg = async () => {
-    const newMsg = {
-      conversationId: conversation._id,
-      senderId: user._id,
-      text: msg,
-    };
+  const handleSendMsg = async e => {
+    e.preventDefault();
 
-    await fetch(baseUrl + '/message/create', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newMsg),
-    }).then(response => {
-      response.json().then(data => {
-        setMessages([...messages, data]);
+    if (msg.length > 0) {
+      const newMsg = {
+        conversationId: conversation._id,
+        senderId: user._id,
+        text: msg,
+      };
+      await fetch(baseUrl + '/message/create', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newMsg),
+      }).then(response => {
+        response.json().then(data => {
+          console.log('response after successful msg -> ', data);
+          console.log([...messages, data]);
+          setMessages([...messages, data]);
+          setMsg('');
+        });
       });
-    });
+    } else {
+      alert('Please enter a message');
+    }
   };
 
   return (
-    console.log(messages),
-    (
-      <>
-        <View style={styles.chatBoxContainer}>
-          <ScrollView
-            style={styles.chatBox}
-            ref={scrollViewRef}
-            onContentSizeChange={() =>
-              scrollViewRef.current.scrollToEnd({animated: true})
-            }>
-            {messages?.map(message => {
-              return (
-                <Message
-                  own={message.senderId === user._id ? true : false}
-                  message={message}
-                />
-              );
-            })}
-          </ScrollView>
-        </View>
-        <KeyboardAvoidingView
-          style={{position: 'absolute', left: 0, right: 0, bottom: 0}}
-          behavior="position"
-          keyboardVerticalOffset={height - 300}>
-          <View style={styles.chatBottom}>
-            <View style={styles.textInput}>
-              <TextInput
-                label="Your Message"
-                value={msg}
-                mode="outlined"
-                onChangeText={msg => setMsg(msg)}
+    <>
+      <View style={styles.chatBoxContainer}>
+        <ScrollView
+          style={styles.chatBox}
+          ref={scrollViewRef}
+          onContentSizeChange={() =>
+            scrollViewRef.current.scrollToEnd({animated: true})
+          }>
+          {messages?.map(message => {
+            console.log(message);
+            return (
+              <Message
+                own={message.senderId === user._id ? true : false}
+                message={message}
+                key={message._id}
               />
-            </View>
-            <View style={styles.sendBtn}>
-              <Button
-                icon="send"
-                mode="contained"
-                buttonColor="#da0037"
-                onPress={handleSendMsg}
-              />
-            </View>
+            );
+          })}
+        </ScrollView>
+      </View>
+      <KeyboardAvoidingView
+        style={{position: 'absolute', left: 0, right: 0, bottom: 0}}
+        behavior="position"
+        keyboardVerticalOffset={height - 300}>
+        <View style={styles.chatBottom}>
+          <View style={styles.textInput}>
+            <TextInput
+              label="Your Message"
+              value={msg}
+              mode="outlined"
+              onChangeText={msg => setMsg(msg)}
+            />
           </View>
-        </KeyboardAvoidingView>
-      </>
-    )
+          <View style={styles.sendBtn}>
+            <Button
+              icon="send"
+              mode="contained"
+              buttonColor="#da0037"
+              onPress={e => handleSendMsg(e)}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginHorizontal: 20,
     marginTop: 20,
+    marginBottom: 55,
   },
   chatBottom: {
     display: 'flex',
