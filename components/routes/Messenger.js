@@ -1,4 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
+
+import io from 'socket.io-client';
+
 import {View, StyleSheet, Touchable, TouchableOpacity} from 'react-native';
 import {
   TextInput,
@@ -27,6 +30,12 @@ const Messenger = () => {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
+  useEffect(() => {
+    // ws://vast-hollows-04909.herokuapp.com
+    const socket = io('ws://mern-social-network-dewmith.herokuapp.com');
+    GlobalState.socket = socket;
+  }, []);
 
   useEffect(() => {
     const getAllConversations = async () => {

@@ -18,9 +18,14 @@ import GlobalState from '../../GlobalState';
 const Chat = ({route}) => {
   const {conversation, friend} = route.params;
 
+  console.log('converse => ', conversation);
+
   const user = GlobalState.user;
+  const socket = GlobalState.socket;
 
   const [messages, setMessages] = useState([]);
+
+  const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const [msg, setMsg] = useState('');
 
@@ -48,6 +53,28 @@ const Chat = ({route}) => {
     getMessages();
   }, [conversation]);
 
+  useEffect(() => {
+    socket.emit('addUser', user._id);
+  }, [user]);
+
+  // Receive message from socket server
+  useEffect(() => {
+    socket.on('getMessage', message => {
+      console.log(message);
+      setArrivalMessage({
+        senderId: message.senderId,
+        text: message.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      conversation?.members.includes(arrivalMessage.senderId) &&
+      setMessages(prev => [...prev, arrivalMessage]);
+  }, [arrivalMessage, conversation]);
+
   const handleSendMsg = async e => {
     e.preventDefault();
 
@@ -57,6 +84,13 @@ const Chat = ({route}) => {
         senderId: user._id,
         text: msg,
       };
+
+      socket.emit('sendMessage', {
+        senderId: user._id,
+        receiverId: friend._id,
+        text: msg,
+      });
+
       await fetch(baseUrl + '/message/create', {
         method: 'POST',
         headers: {
@@ -65,12 +99,13 @@ const Chat = ({route}) => {
         },
         body: JSON.stringify(newMsg),
       }).then(response => {
-        response.json().then(data => {
-          console.log('response after successful msg -> ', data);
-          console.log([...messages, data]);
-          setMessages([...messages, data]);
-          setMsg('');
-        });
+        response
+          .json()
+          .then(data => {
+            setMessages([...messages, data]);
+            setMsg('');
+          })
+          .catch(err => console.log(err));
       });
     } else {
       alert('Please enter a message');
@@ -87,7 +122,6 @@ const Chat = ({route}) => {
             scrollViewRef.current.scrollToEnd({animated: true})
           }>
           {messages?.map(message => {
-            console.log(message);
             return (
               <Message
                 own={message.senderId === user._id ? true : false}
