@@ -33,7 +33,7 @@ const Messenger = () => {
 
   useEffect(() => {
     // ws://vast-hollows-04909.herokuapp.com
-    const socket = io('ws://mern-social-network-dewmith.herokuapp.com');
+    const socket = io('ws://192.168.1.5:5000');
     GlobalState.socket = socket;
   }, []);
 

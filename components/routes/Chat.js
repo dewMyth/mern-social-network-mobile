@@ -124,9 +124,9 @@ const Chat = ({route}) => {
           {messages?.map(message => {
             return (
               <Message
+                key={message._id}
                 own={message.senderId === user._id ? true : false}
                 message={message}
-                key={message._id}
               />
             );
           })}
